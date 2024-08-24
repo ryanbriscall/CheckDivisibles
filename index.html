@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CheckDivisibles</title>
+	<meta name="description" content="Helps you resize media by showing a list of dimensions and their power-of-two counts.">
+	<style>
+	*, *::before, *::after {box-sizing:border-box}
+	body {font-family:arial;background:#111;color:#eee;font-size:calc(48 * (100vw / 1280))}
+	button, input, select {font-family:inherit;font-size:inherit;}
+	input, select, button, textarea {color:#ccc;background:#333;max-width:100%}
+	input[type=text], textarea {appearance:textfield;border:2px inset #777}
+	button, select, input[type=file], input[type=submit], input[type=button] {border:2px outset #555}
+	img {max-width:100%}
+	a:link{color:#4b6bb6} a:active{color:#c93} a:visited{color:#723e8f} a:visited:active{color:#b83f32}
+	html::-webkit-scrollbar { width: 16px; height: 16px; }
+	html::-webkit-scrollbar-thumb { background: #456; border-radius: 16px; box-shadow: inset 2px 2px 2px hsla(0,0%,100%,.25), inset -2px -2px 2px rgba(0,0,0,.25); }
+	html::-webkit-scrollbar-track { background: #222; }
+	</style>
+</head>
+<body>
+<h1 style="margin:0">Check divisibles</h1>
+
+<div>
+	<input id="res" type="text" placeholder="1920x1080" value="1920x1080">
+</div>
+<pre id="output" style="font-size:0.8rem"></pre>
+<script>
+function changeEvent() {
+	var p = res.value.split(/x/);
+	if (p.length < 2 || p[1].trim().length < 2 || +p[1] <= 1) {
+		output.textContent = '';
+		return;
+	}
+
+	var o = '';
+	var x = p[0];
+	var y = p[1];
+	var ratio = y / x;
+	while (x > 160) {
+		y = Math.floor(x * ratio);
+		o += x+' x '+y+' = '+divisibles(x, 2)+" x "+divisibles(y, 2)+'\n';
+		x = x - 2;
+	}
+	output.textContent = o;
+}
+document.querySelector('#res').addEventListener('keyup', function(e) {
+	changeEvent();
+});
+changeEvent();
+
+function divisibles(n, v) {
+	var c = 0;
+	var r = '';
+	while (String(n/v).split('.').length < 2) {
+		n = n / v;
+		c = c + 1;
+		r = r+'/'+v;
+	}
+	return c+' = '+r;
+}
+</script>
+</body>
+</html>
